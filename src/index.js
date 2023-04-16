@@ -16,10 +16,10 @@ const oldIOS = () =>
   ) < 10 &&
   !window.MSStream;
 
-// Detect native Wake Lock API support (Samsung Browser supports it but cannot use it)
+// Detect native Wake Lock API support (Samsung Browser supports it but cannot use it + not fully supported in iOS)
 const nativeWakeLock = () =>
   "wakeLock" in navigator &&
-  window.navigator.userAgent.indexOf("Samsung") === -1;
+  !(/samsung|iphone|ipad/).test(window.navigator.userAgent.toLowerCase());
 
 class NoSleep {
   constructor() {
