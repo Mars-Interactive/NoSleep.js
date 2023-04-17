@@ -6,7 +6,7 @@ Check out the [live demo](https://richtr.github.io/NoSleep.js/example) in any An
 
 ## Installation
 
-This package is published to npm as **@uriopass/nosleep.js** and can be installed with:
+This package is published to npm as **@ananeytech/nosleep.js** and can be installed with:
 
 `npm install @uriopass/nosleep.js`
 
@@ -21,10 +21,11 @@ To build this library run:
 `npm run build`
 
 ## Usage
+
 Import ES6 module:
 
 ```javascript
-import NoSleep from '@uriopass/nosleep.js';
+import NoSleep from '@ananeytech/nosleep.js';
 ```
 
 Create a new NoSleep object and then enable or disable it when needed.
@@ -37,7 +38,7 @@ var noSleep = new NoSleep();
 
 To enable wake lock:
 
-**NOTE: This function call must be wrapped in a user input event handler e.g. a mouse or touch handler**
+*NOTE: This function call must be wrapped in a user input event handler e.g. a mouse or touch handler**
 
 ```javascript
 // Enable wake lock.
@@ -56,16 +57,16 @@ To disable wake lock:
 noSleep.disable();
 ```
 
-See [example/index.html](https://github.com/Uriopass/NoSleep.js/blob/master/example/index.html) (and the [live demo](https://richtr.github.io/NoSleep.js/example)) for more information.
+See [example/index.html](https://github.com/Mars-Interactive/NoSleep.js/blob/master/example/index.html) (and the [live demo](https://richtr.github.io/NoSleep.js/example)) for more information.
 
 ## Feedback
 
-If you find any bugs or issues please report them on the [NoSleep.js Issue Tracker](https://github.com/Uriopass/NoSleep.js/issues).
+If you find any bugs or issues please report them on the [NoSleep.js Issue Tracker](https://github.com/Mars-Interactive/NoSleep.js/issues).
 
-If you would like to contribute to this project please consider [forking this repo](https://github.com/Uriopass/NoSleep.js/fork), making your changes and then creating a new [Pull Request](https://github.com/Uriopass/NoSleep.js/pulls) back to the main code repository.
+If you would like to contribute to this project please consider [forking this repo](https://github.com/Mars-Interactive/NoSleep.js/fork), making your changes and then creating a new [Pull Request](https://github.com/Mars-Interactive/NoSleep.js/pulls) back to the main code repository.
 
 ## License
 
 MIT. Copyright (c) [Rich Tibbett](https://twitter.com/_richtr).
 
-See the [LICENSE](https://github.com/Uriopass/NoSleep.js/blob/master/LICENSE) file.
+See the [LICENSE](https://github.com/Mars-Interactive/NoSleep.js/blob/master/LICENSE) file.
