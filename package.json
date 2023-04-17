@@ -1,6 +1,6 @@
 {
   "name": "@uriopass/nosleep.js",
-  "version": "0.12.1",
+  "version": "0.12.2",
   "author": "Pâris DOUADY",
   "license": "MIT",
   "description": "Prevent display sleep and enable wake lock in any Android or iOS web browser",
