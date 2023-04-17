@@ -8,7 +8,7 @@ Check out the [live demo](https://richtr.github.io/NoSleep.js/example) in any An
 
 This package is published to npm as **@marsgames/nosleep.js** and can be installed with:
 
-`npm install @uriopass/nosleep.js`
+`npm install @marsgames/nosleep.js`
 
 ## Build from source
 
