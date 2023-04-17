@@ -6,7 +6,7 @@ Check out the [live demo](https://richtr.github.io/NoSleep.js/example) in any An
 
 ## Installation
 
-This package is published to npm as **@ananeytech/nosleep.js** and can be installed with:
+This package is published to npm as **@marsgames/nosleep.js** and can be installed with:
 
 `npm install @uriopass/nosleep.js`
 
@@ -25,7 +25,7 @@ To build this library run:
 Import ES6 module:
 
 ```javascript
-import NoSleep from '@ananeytech/nosleep.js';
+import NoSleep from '@marsgames/nosleep.js';
 ```
 
 Create a new NoSleep object and then enable or disable it when needed.
