@@ -19,7 +19,7 @@ const oldIOS = () =>
 // Detect native Wake Lock API support (Samsung Browser supports it but cannot use it + not fully supported in iOS)
 const nativeWakeLock = () =>
   "wakeLock" in navigator &&
-  !(/samsung|iphone|ipad/).test(window.navigator.userAgent.toLowerCase());
+  !(/samsung|iphone|ipad|ipod/).test(window.navigator.userAgent.toLowerCase());
 
 class NoSleep {
   constructor() {
@@ -29,6 +29,8 @@ class NoSleep {
       const handleVisibilityChange = () => {
         if (this._wakeLock !== null && document.visibilityState === "visible") {
           this.enable();
+        } else {
+          this.disable();
         }
       };
       document.addEventListener("visibilitychange", handleVisibilityChange);
@@ -88,12 +90,6 @@ class NoSleep {
           this._wakeLock = wakeLock;
           this.enabled = true;
           console.log("Wake Lock active.");
-          this._wakeLock.addEventListener("release", () => {
-            // ToDo: Potentially emit an event for the page to observe since
-            // Wake Lock releases happen when page visibility changes.
-            // (https://web.dev/wakelock/#wake-lock-lifecycle)
-            console.log("Wake Lock released.");
-          });
         })
         .catch((err) => {
           this.enabled = false;
@@ -124,6 +120,7 @@ class NoSleep {
         })
         .catch((err) => {
           this.enabled = false;
+          console.error("NoSleep failed to play Video.");
           throw err;
         });
     }
@@ -133,18 +130,22 @@ class NoSleep {
     if (nativeWakeLock()) {
       if (this._wakeLock) {
         this._wakeLock.release();
+        document.removeEventListener("visibilitychange");
+        document.removeEventListener("fullscreenchange");
+        console.log("Wake Lock released.");
       }
       this._wakeLock = null;
     } else if (oldIOS()) {
       if (this.noSleepTimer) {
-        console.warn(`
-          NoSleep now disabled for older iOS devices.
-        `);
+        console.warn('NoSleep now disabled for older iOS devices.');
         window.clearInterval(this.noSleepTimer);
+        this.noSleepVideo.removeEventListener("loadedmetadata");
+        this.noSleepVideo.removeEventListener("timeupdate");
         this.noSleepTimer = null;
       }
     } else {
       this.noSleepVideo.pause();
+      this.noSleepVideo.remove();
     }
     this.enabled = false;
   }

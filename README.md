@@ -2,8 +2,6 @@
 
 Prevent display sleep and enable wake lock in all Android and iOS web browsers.
 
-Check out the [live demo](https://richtr.github.io/NoSleep.js/example) in any Android or iOS web browser.
-
 ## Installation
 
 This package is published to npm as **@marsgames/nosleep.js** and can be installed with:
@@ -57,8 +55,6 @@ To disable wake lock:
 noSleep.disable();
 ```
 
-See [example/index.html](https://github.com/Mars-Interactive/NoSleep.js/blob/master/example/index.html) (and the [live demo](https://richtr.github.io/NoSleep.js/example)) for more information.
-
 ## Feedback
 
 If you find any bugs or issues please report them on the [NoSleep.js Issue Tracker](https://github.com/Mars-Interactive/NoSleep.js/issues).
@@ -67,6 +63,6 @@ If you would like to contribute to this project please consider [forking this re
 
 ## License
 
-MIT. Copyright (c) [Rich Tibbett](https://twitter.com/_richtr).
+Original author: MIT. Copyright (c) [Rich Tibbett](https://twitter.com/_richtr).
 
 See the [LICENSE](https://github.com/Mars-Interactive/NoSleep.js/blob/master/LICENSE) file.

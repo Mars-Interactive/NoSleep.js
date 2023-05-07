@@ -1,9 +1,9 @@
 {
   "name": "nosleep",
   "title": "NoSleep.js",
-  "version": "0.12.2",
+  "version": "0.12.3",
   "description": "Prevent display sleep on all Android and iOS browsers",
-  "homepage": "https://github.com/richtr/NoSleep.js",
+  "homepage": "https://github.com/Mars-Interactive/NoSleep.js.git",
   "authors": ["Rich Tibbett"],
   "main": "src/index.js",
   "license": "MIT",

@@ -1,4 +1,4 @@
-/*! NoSleep.js v0.12.2 - git.io/vfn01 - AnaneyTech - MIT license */
+/*! NoSleep.js v0.12.3 - git.io/vfn01 - AnaneyTech - MIT license */
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
 		module.exports = factory();
@@ -32,7 +32,7 @@ var oldIOS = function oldIOS() {
 
 // Detect native Wake Lock API support (Samsung Browser supports it but cannot use it + not fully supported in iOS)
 var nativeWakeLock = function nativeWakeLock() {
-  return "wakeLock" in navigator && !/samsung|iphone|ipad/.test(window.navigator.userAgent.toLowerCase());
+  return "wakeLock" in navigator && !/samsung|iphone|ipad|ipod/.test(window.navigator.userAgent.toLowerCase());
 };
 var NoSleep = /*#__PURE__*/function () {
   function NoSleep() {
@@ -44,6 +44,8 @@ var NoSleep = /*#__PURE__*/function () {
       var handleVisibilityChange = function handleVisibilityChange() {
         if (_this._wakeLock !== null && document.visibilityState === "visible") {
           _this.enable();
+        } else {
+          _this.disable();
         }
       };
       document.addEventListener("visibilitychange", handleVisibilityChange);
@@ -102,12 +104,6 @@ var NoSleep = /*#__PURE__*/function () {
           _this2._wakeLock = wakeLock;
           _this2.enabled = true;
           console.log("Wake Lock active.");
-          _this2._wakeLock.addEventListener("release", function () {
-            // ToDo: Potentially emit an event for the page to observe since
-            // Wake Lock releases happen when page visibility changes.
-            // (https://web.dev/wakelock/#wake-lock-lifecycle)
-            console.log("Wake Lock released.");
-          });
         })["catch"](function (err) {
           _this2.enabled = false;
           console.error("".concat(err.name, ", ").concat(err.message));
@@ -131,6 +127,7 @@ var NoSleep = /*#__PURE__*/function () {
           return res;
         })["catch"](function (err) {
           _this2.enabled = false;
+          console.error("NoSleep failed to play Video.");
           throw err;
         });
       }
@@ -141,16 +138,22 @@ var NoSleep = /*#__PURE__*/function () {
       if (nativeWakeLock()) {
         if (this._wakeLock) {
           this._wakeLock.release();
+          document.removeEventListener("visibilitychange");
+          document.removeEventListener("fullscreenchange");
+          console.log("Wake Lock released.");
         }
         this._wakeLock = null;
       } else if (oldIOS()) {
         if (this.noSleepTimer) {
-          console.warn("\n          NoSleep now disabled for older iOS devices.\n        ");
+          console.warn('NoSleep now disabled for older iOS devices.');
           window.clearInterval(this.noSleepTimer);
+          this.noSleepVideo.removeEventListener("loadedmetadata");
+          this.noSleepVideo.removeEventListener("timeupdate");
           this.noSleepTimer = null;
         }
       } else {
         this.noSleepVideo.pause();
+        this.noSleepVideo.remove();
       }
       this.enabled = false;
     }
