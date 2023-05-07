@@ -24,6 +24,7 @@ const nativeWakeLock = () =>
 class NoSleep {
   constructor() {
     this.enabled = false;
+
     if (nativeWakeLock()) {
       this._wakeLock = null;
       document.addEventListener("visibilitychange", this.handleVisibilityChange);
@@ -33,10 +34,8 @@ class NoSleep {
     } else {
       // Set up no sleep video element
       this.noSleepVideo = document.createElement("video");
-
       this.noSleepVideo.setAttribute("title", "No Sleep");
       this.noSleepVideo.setAttribute("playsinline", "");
-
       this._addSourceToVideo(this.noSleepVideo, "webm", webm);
       this._addSourceToVideo(this.noSleepVideo, "mp4", mp4);
 
@@ -52,55 +51,26 @@ class NoSleep {
     }
   }
 
-  handleVisibilityChange() {
+  handleVisibilityChange = () => {
     if (this._wakeLock !== null && document.visibilityState === "visible") {
       this.enable();
     } else {
       this.disable();
     }
-  }
+  };
 
-  timeUpdate() {
-    if (this.noSleepVideo.currentTime > 0.5) {
-      this.noSleepVideo.currentTime = Math.random();
-    }
-  }
-
-  loadMetaData() {
-    if (this.noSleepVideo.duration <= 1) {
-      // webm source
-      this.noSleepVideo.setAttribute("loop", "");
-    } else {
-      // mp4 source
-      this.noSleepVideo.addEventListener("timeupdate", this.timeUpdate);
-    }
-  }
-
-  _addSourceToVideo(element, type, dataURI) {
-    var source = document.createElement("source");
-    source.src = dataURI;
-    source.type = `video/${type}`;
-    element.appendChild(source);
-  }
-
-  get isEnabled() {
-    return this.enabled;
-  }
-
-  enable() {
+  enable = async () => {
     if (nativeWakeLock()) {
-      return navigator.wakeLock
-        .request("screen")
-        .then((wakeLock) => {
-          this._wakeLock = wakeLock;
-          this.enabled = true;
-          console.log("Wake Lock active.");
-        })
-        .catch((err) => {
-          this.enabled = false;
-          console.error(`${err.name}, ${err.message}`);
-          throw err;
-        });
+      try {
+        const wakeLock = await navigator.wakeLock.request("screen");
+        this._wakeLock = wakeLock;
+        this.enabled = true;
+        console.log("Wake Lock active.");
+      } catch (err) {
+        this.enabled = false;
+        console.error(`${err.name}, ${err.message}`);
+        throw err;
+      }
     } else if (oldIOS()) {
       this.disable();
       console.warn(`
@@ -118,20 +88,19 @@ class NoSleep {
       return Promise.resolve();
     } else {
       let playPromise = this.noSleepVideo.play();
-      return playPromise
-        .then((res) => {
-          this.enabled = true;
-          return res;
-        })
-        .catch((err) => {
-          this.enabled = false;
-          console.error("NoSleep failed to play Video.");
-          throw err;
-        });
+      try {
+        const res = await playPromise;
+        this.enabled = true;
+        return res;
+      } catch (err_1) {
+        this.enabled = false;
+        console.error("NoSleep failed to play Video.");
+        throw err_1;
+      }
     }
-  }
+  };
 
-  disable() {
+  disable = () => {
     if (nativeWakeLock()) {
       if (this._wakeLock) {
         this._wakeLock.release();
@@ -152,6 +121,33 @@ class NoSleep {
       this.noSleepVideo.pause();
     }
     this.enabled = false;
+  };
+
+  timeUpdate = () => {
+    if (this.noSleepVideo.currentTime > 0.5) {
+      this.noSleepVideo.currentTime = Math.random();
+    }
+  };
+
+  loadMetaData = () => {
+    if (this.noSleepVideo.duration <= 1) {
+      // webm source
+      this.noSleepVideo.setAttribute("loop", "");
+    } else {
+      // mp4 source
+      this.noSleepVideo.addEventListener("timeupdate", this.timeUpdate);
+    }
+  };
+
+  _addSourceToVideo(element, type, dataURI) {
+    var source = document.createElement("source");
+    source.src = dataURI;
+    source.type = `video/${type}`;
+    element.appendChild(source);
+  }
+
+  get isEnabled() {
+    return this.enabled;
   }
 }
 

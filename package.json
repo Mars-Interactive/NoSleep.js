@@ -1,6 +1,6 @@
 {
   "name": "@marsgames/nosleep.js",
-  "version": "0.12.6",
+  "version": "0.12.7",
   "author": "AnaneyTech",
   "license": "MIT",
   "description": "Prevent display sleep and enable wake lock in any Android or iOS web browser",
