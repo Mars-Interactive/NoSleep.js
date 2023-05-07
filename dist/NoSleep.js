@@ -1,4 +1,4 @@
-/*! NoSleep.js v0.12.4 - git.io/vfn01 - AnaneyTech - MIT license */
+/*! NoSleep.js v0.12.5 - git.io/vfn01 - AnaneyTech - MIT license */
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
 		module.exports = factory();
@@ -13,10 +13,9 @@ return /******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ({
 
 /***/ 352:
-/***/ (function(module, __unused_webpack_exports, __webpack_require__) {
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
 function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
-var _this = this;
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, _toPropertyKey(descriptor.key), descriptor); } }
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); Object.defineProperty(Constructor, "prototype", { writable: false }); return Constructor; }
@@ -34,27 +33,6 @@ var oldIOS = function oldIOS() {
 // Detect native Wake Lock API support (Samsung Browser supports it but cannot use it + not fully supported in iOS)
 var nativeWakeLock = function nativeWakeLock() {
   return "wakeLock" in navigator && !/samsung|iphone|ipad|ipod/.test(window.navigator.userAgent.toLowerCase());
-};
-var handleVisibilityChange = function handleVisibilityChange() {
-  if (_this._wakeLock !== null && document.visibilityState === "visible") {
-    _this.enable();
-  } else {
-    _this.disable();
-  }
-};
-var timeupdate = function timeupdate() {
-  if (_this.noSleepVideo.currentTime > 0.5) {
-    _this.noSleepVideo.currentTime = Math.random();
-  }
-};
-var loadMetaData = function loadMetaData() {
-  if (_this.noSleepVideo.duration <= 1) {
-    // webm source
-    _this.noSleepVideo.setAttribute("loop", "");
-  } else {
-    // mp4 source
-    _this.noSleepVideo.addEventListener("timeupdate", timeupdate);
-  }
 };
 var NoSleep = /*#__PURE__*/function () {
   function NoSleep() {
@@ -85,6 +63,33 @@ var NoSleep = /*#__PURE__*/function () {
     }
   }
   _createClass(NoSleep, [{
+    key: "handleVisibilityChange",
+    value: function handleVisibilityChange() {
+      if (this._wakeLock !== null && document.visibilityState === "visible") {
+        this.enable();
+      } else {
+        this.disable();
+      }
+    }
+  }, {
+    key: "timeUpdate",
+    value: function timeUpdate() {
+      if (this.noSleepVideo.currentTime > 0.5) {
+        this.noSleepVideo.currentTime = Math.random();
+      }
+    }
+  }, {
+    key: "loadMetaData",
+    value: function loadMetaData() {
+      if (this.noSleepVideo.duration <= 1) {
+        // webm source
+        this.noSleepVideo.setAttribute("loop", "");
+      } else {
+        // mp4 source
+        this.noSleepVideo.addEventListener("timeupdate", timeUpdate);
+      }
+    }
+  }, {
     key: "_addSourceToVideo",
     value: function _addSourceToVideo(element, type, dataURI) {
       var source = document.createElement("source");
@@ -100,14 +105,14 @@ var NoSleep = /*#__PURE__*/function () {
   }, {
     key: "enable",
     value: function enable() {
-      var _this2 = this;
+      var _this = this;
       if (nativeWakeLock()) {
         return navigator.wakeLock.request("screen").then(function (wakeLock) {
-          _this2._wakeLock = wakeLock;
-          _this2.enabled = true;
+          _this._wakeLock = wakeLock;
+          _this.enabled = true;
           console.log("Wake Lock active.");
         })["catch"](function (err) {
-          _this2.enabled = false;
+          _this.enabled = false;
           console.error("".concat(err.name, ", ").concat(err.message));
           throw err;
         });
@@ -125,10 +130,10 @@ var NoSleep = /*#__PURE__*/function () {
       } else {
         var playPromise = this.noSleepVideo.play();
         return playPromise.then(function (res) {
-          _this2.enabled = true;
+          _this.enabled = true;
           return res;
         })["catch"](function (err) {
-          _this2.enabled = false;
+          _this.enabled = false;
           console.error("NoSleep failed to play Video.");
           throw err;
         });
@@ -150,7 +155,7 @@ var NoSleep = /*#__PURE__*/function () {
           console.warn('NoSleep now disabled for older iOS devices.');
           window.clearInterval(this.noSleepTimer);
           this.noSleepVideo.removeEventListener("loadedmetadata", loadMetaData);
-          this.noSleepVideo.removeEventListener("timeupdate", timeupdate);
+          this.noSleepVideo.removeEventListener("timeupdate", timeUpdate);
           this.noSleepTimer = null;
         }
       } else {
@@ -195,7 +200,7 @@ module.exports = {
 /******/ 		};
 /******/ 	
 /******/ 		// Execute the module function
-/******/ 		__webpack_modules__[moduleId].call(module.exports, module, module.exports, __webpack_require__);
+/******/ 		__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
 /******/ 	
 /******/ 		// Return the exports of the module
 /******/ 		return module.exports;

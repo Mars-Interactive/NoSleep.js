@@ -21,30 +21,6 @@ const nativeWakeLock = () =>
   "wakeLock" in navigator &&
   !(/samsung|iphone|ipad|ipod/).test(window.navigator.userAgent.toLowerCase());
 
-const handleVisibilityChange = () => {
-  if (this._wakeLock !== null && document.visibilityState === "visible") {
-    this.enable();
-  } else {
-    this.disable();
-  }
-};
-
-const timeupdate = () => {
-  if (this.noSleepVideo.currentTime > 0.5) {
-    this.noSleepVideo.currentTime = Math.random();
-  }
-}
-
-const loadMetaData = () => {
-  if (this.noSleepVideo.duration <= 1) {
-    // webm source
-    this.noSleepVideo.setAttribute("loop", "");
-  } else {
-    // mp4 source
-    this.noSleepVideo.addEventListener("timeupdate", timeupdate);
-  }
-}
-
 class NoSleep {
   constructor() {
     this.enabled = false;
@@ -73,6 +49,30 @@ class NoSleep {
       document.querySelector("body").append(this.noSleepVideo);
 
       this.noSleepVideo.addEventListener("loadedmetadata", loadMetaData);
+    }
+  }
+
+  handleVisibilityChange() {
+    if (this._wakeLock !== null && document.visibilityState === "visible") {
+      this.enable();
+    } else {
+      this.disable();
+    }
+  }
+
+  timeUpdate() {
+    if (this.noSleepVideo.currentTime > 0.5) {
+      this.noSleepVideo.currentTime = Math.random();
+    }
+  }
+
+  loadMetaData() {
+    if (this.noSleepVideo.duration <= 1) {
+      // webm source
+      this.noSleepVideo.setAttribute("loop", "");
+    } else {
+      // mp4 source
+      this.noSleepVideo.addEventListener("timeupdate", timeUpdate);
     }
   }
 
@@ -145,7 +145,7 @@ class NoSleep {
         console.warn('NoSleep now disabled for older iOS devices.');
         window.clearInterval(this.noSleepTimer);
         this.noSleepVideo.removeEventListener("loadedmetadata", loadMetaData);
-        this.noSleepVideo.removeEventListener("timeupdate", timeupdate);
+        this.noSleepVideo.removeEventListener("timeupdate", timeUpdate);
         this.noSleepTimer = null;
       }
     } else {
