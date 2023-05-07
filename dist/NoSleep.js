@@ -1,4 +1,4 @@
-/*! NoSleep.js v0.12.5 - git.io/vfn01 - AnaneyTech - MIT license */
+/*! NoSleep.js v0.12.6 - git.io/vfn01 - AnaneyTech - MIT license */
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
 		module.exports = factory();
@@ -40,8 +40,8 @@ var NoSleep = /*#__PURE__*/function () {
     this.enabled = false;
     if (nativeWakeLock()) {
       this._wakeLock = null;
-      document.addEventListener("visibilitychange", handleVisibilityChange);
-      document.addEventListener("fullscreenchange", handleVisibilityChange);
+      document.addEventListener("visibilitychange", this.handleVisibilityChange);
+      document.addEventListener("fullscreenchange", this.handleVisibilityChange);
     } else if (oldIOS()) {
       this.noSleepTimer = null;
     } else {
@@ -59,7 +59,7 @@ var NoSleep = /*#__PURE__*/function () {
         top: "-100%"
       });
       document.querySelector("body").append(this.noSleepVideo);
-      this.noSleepVideo.addEventListener("loadedmetadata", loadMetaData);
+      this.noSleepVideo.addEventListener("loadedmetadata", this.loadMetaData);
     }
   }
   _createClass(NoSleep, [{
@@ -86,7 +86,7 @@ var NoSleep = /*#__PURE__*/function () {
         this.noSleepVideo.setAttribute("loop", "");
       } else {
         // mp4 source
-        this.noSleepVideo.addEventListener("timeupdate", timeUpdate);
+        this.noSleepVideo.addEventListener("timeupdate", this.timeUpdate);
       }
     }
   }, {
@@ -145,8 +145,8 @@ var NoSleep = /*#__PURE__*/function () {
       if (nativeWakeLock()) {
         if (this._wakeLock) {
           this._wakeLock.release();
-          document.removeEventListener("visibilitychange", handleVisibilityChange);
-          document.removeEventListener("fullscreenchange", handleVisibilityChange);
+          document.removeEventListener("visibilitychange", this.handleVisibilityChange);
+          document.removeEventListener("fullscreenchange", this.handleVisibilityChange);
           console.log("Wake Lock released.");
         }
         this._wakeLock = null;
@@ -154,8 +154,8 @@ var NoSleep = /*#__PURE__*/function () {
         if (this.noSleepTimer) {
           console.warn('NoSleep now disabled for older iOS devices.');
           window.clearInterval(this.noSleepTimer);
-          this.noSleepVideo.removeEventListener("loadedmetadata", loadMetaData);
-          this.noSleepVideo.removeEventListener("timeupdate", timeUpdate);
+          this.noSleepVideo.removeEventListener("loadedmetadata", this.loadMetaData);
+          this.noSleepVideo.removeEventListener("timeupdate", this.timeUpdate);
           this.noSleepTimer = null;
         }
       } else {

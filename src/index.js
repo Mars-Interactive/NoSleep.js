@@ -26,8 +26,8 @@ class NoSleep {
     this.enabled = false;
     if (nativeWakeLock()) {
       this._wakeLock = null;
-      document.addEventListener("visibilitychange", handleVisibilityChange);
-      document.addEventListener("fullscreenchange", handleVisibilityChange);
+      document.addEventListener("visibilitychange", this.handleVisibilityChange);
+      document.addEventListener("fullscreenchange", this.handleVisibilityChange);
     } else if (oldIOS()) {
       this.noSleepTimer = null;
     } else {
@@ -48,7 +48,7 @@ class NoSleep {
       });
       document.querySelector("body").append(this.noSleepVideo);
 
-      this.noSleepVideo.addEventListener("loadedmetadata", loadMetaData);
+      this.noSleepVideo.addEventListener("loadedmetadata", this.loadMetaData);
     }
   }
 
@@ -72,7 +72,7 @@ class NoSleep {
       this.noSleepVideo.setAttribute("loop", "");
     } else {
       // mp4 source
-      this.noSleepVideo.addEventListener("timeupdate", timeUpdate);
+      this.noSleepVideo.addEventListener("timeupdate", this.timeUpdate);
     }
   }
 
@@ -135,8 +135,8 @@ class NoSleep {
     if (nativeWakeLock()) {
       if (this._wakeLock) {
         this._wakeLock.release();
-        document.removeEventListener("visibilitychange", handleVisibilityChange);
-        document.removeEventListener("fullscreenchange", handleVisibilityChange);
+        document.removeEventListener("visibilitychange", this.handleVisibilityChange);
+        document.removeEventListener("fullscreenchange", this.handleVisibilityChange);
         console.log("Wake Lock released.");
       }
       this._wakeLock = null;
@@ -144,8 +144,8 @@ class NoSleep {
       if (this.noSleepTimer) {
         console.warn('NoSleep now disabled for older iOS devices.');
         window.clearInterval(this.noSleepTimer);
-        this.noSleepVideo.removeEventListener("loadedmetadata", loadMetaData);
-        this.noSleepVideo.removeEventListener("timeupdate", timeUpdate);
+        this.noSleepVideo.removeEventListener("loadedmetadata", this.loadMetaData);
+        this.noSleepVideo.removeEventListener("timeupdate", this.timeUpdate);
         this.noSleepTimer = null;
       }
     } else {
