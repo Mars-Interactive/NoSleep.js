@@ -21,18 +21,35 @@ const nativeWakeLock = () =>
   "wakeLock" in navigator &&
   !(/samsung|iphone|ipad|ipod/).test(window.navigator.userAgent.toLowerCase());
 
+const handleVisibilityChange = () => {
+  if (this._wakeLock !== null && document.visibilityState === "visible") {
+    this.enable();
+  } else {
+    this.disable();
+  }
+};
+
+const timeupdate = () => {
+  if (this.noSleepVideo.currentTime > 0.5) {
+    this.noSleepVideo.currentTime = Math.random();
+  }
+}
+
+const loadMetaData = () => {
+  if (this.noSleepVideo.duration <= 1) {
+    // webm source
+    this.noSleepVideo.setAttribute("loop", "");
+  } else {
+    // mp4 source
+    this.noSleepVideo.addEventListener("timeupdate", timeupdate);
+  }
+}
+
 class NoSleep {
   constructor() {
     this.enabled = false;
     if (nativeWakeLock()) {
       this._wakeLock = null;
-      const handleVisibilityChange = () => {
-        if (this._wakeLock !== null && document.visibilityState === "visible") {
-          this.enable();
-        } else {
-          this.disable();
-        }
-      };
       document.addEventListener("visibilitychange", handleVisibilityChange);
       document.addEventListener("fullscreenchange", handleVisibilityChange);
     } else if (oldIOS()) {
@@ -55,19 +72,7 @@ class NoSleep {
       });
       document.querySelector("body").append(this.noSleepVideo);
 
-      this.noSleepVideo.addEventListener("loadedmetadata", () => {
-        if (this.noSleepVideo.duration <= 1) {
-          // webm source
-          this.noSleepVideo.setAttribute("loop", "");
-        } else {
-          // mp4 source
-          this.noSleepVideo.addEventListener("timeupdate", () => {
-            if (this.noSleepVideo.currentTime > 0.5) {
-              this.noSleepVideo.currentTime = Math.random();
-            }
-          });
-        }
-      });
+      this.noSleepVideo.addEventListener("loadedmetadata", loadMetaData);
     }
   }
 
@@ -130,8 +135,8 @@ class NoSleep {
     if (nativeWakeLock()) {
       if (this._wakeLock) {
         this._wakeLock.release();
-        document.removeEventListener("visibilitychange");
-        document.removeEventListener("fullscreenchange");
+        document.removeEventListener("visibilitychange", handleVisibilityChange);
+        document.removeEventListener("fullscreenchange", handleVisibilityChange);
         console.log("Wake Lock released.");
       }
       this._wakeLock = null;
@@ -139,13 +144,12 @@ class NoSleep {
       if (this.noSleepTimer) {
         console.warn('NoSleep now disabled for older iOS devices.');
         window.clearInterval(this.noSleepTimer);
-        this.noSleepVideo.removeEventListener("loadedmetadata");
-        this.noSleepVideo.removeEventListener("timeupdate");
+        this.noSleepVideo.removeEventListener("loadedmetadata", loadMetaData);
+        this.noSleepVideo.removeEventListener("timeupdate", timeupdate);
         this.noSleepTimer = null;
       }
     } else {
       this.noSleepVideo.pause();
-      this.noSleepVideo.remove();
     }
     this.enabled = false;
   }
