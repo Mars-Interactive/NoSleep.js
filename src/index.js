@@ -5,7 +5,7 @@ const nativeWakeLock = () =>
   "wakeLock" in navigator &&
   !(/samsung|iphone|ipad|ipod/).test(window.navigator.userAgent.toLowerCase());
 
-const isNativeWakeLockSupported = true;
+let isNativeWakeLockSupported = true;
 
 class NoSleep {
   constructor() {

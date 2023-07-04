@@ -1,4 +1,4 @@
-/*! NoSleep.js v0.12.9 - git.io/vfn01 - AnaneyTech - MIT license */
+/*! NoSleep.js v0.12.10 - git.io/vfn01 - AnaneyTech - MIT license */
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
 		module.exports = factory();
@@ -25,7 +25,6 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
 function _defineProperty(obj, key, value) { key = _toPropertyKey(key); if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 function _toPropertyKey(arg) { var key = _toPrimitive(arg, "string"); return _typeof(key) === "symbol" ? key : String(key); }
 function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input === null) return input; var prim = input[Symbol.toPrimitive]; if (prim !== undefined) { var res = prim.call(input, hint || "default"); if (_typeof(res) !== "object") return res; throw new TypeError("@@toPrimitive must return a primitive value."); } return (hint === "string" ? String : Number)(input); }
-function _readOnlyError(name) { throw new TypeError("\"" + name + "\" is read-only"); }
 var _require = __webpack_require__(186),
   webm = _require.webm,
   mp4 = _require.mp4;
@@ -102,7 +101,7 @@ var NoSleep = /*#__PURE__*/function () {
     if (nativeWakeLock()) {
       this._wakeLock = null;
     } else {
-      false, _readOnlyError("isNativeWakeLockSupported");
+      isNativeWakeLockSupported = false;
       // Set up no sleep video element
       this.noSleepVideo = document.createElement("video");
       this.noSleepVideo.setAttribute("title", "No Sleep");
