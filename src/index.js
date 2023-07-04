@@ -5,6 +5,8 @@ const nativeWakeLock = () =>
   "wakeLock" in navigator &&
   !(/samsung|iphone|ipad|ipod/).test(window.navigator.userAgent.toLowerCase());
 
+const isNativeWakeLockSupported = true;
+
 class NoSleep {
   constructor() {
     this.enabled = false;
@@ -12,6 +14,7 @@ class NoSleep {
     if (nativeWakeLock()) {
       this._wakeLock = null;
     } else {
+      isNativeWakeLockSupported = false;
       // Set up no sleep video element
       this.noSleepVideo = document.createElement("video");
       this.noSleepVideo.setAttribute("title", "No Sleep");
@@ -30,12 +33,12 @@ class NoSleep {
   }
 
   enable = async () => {
-    if (nativeWakeLock()) {
+    if (isNativeWakeLockSupported) {
       try {
         const wakeLock = await navigator.wakeLock.request("screen");
         this._wakeLock = wakeLock;
         this.enabled = true;
-        console.log("Wake Lock active.");
+        console.info("Wake Lock active.");
       } catch (err) {
         this.enabled = false;
         console.error(`NoSleep failed to activate WakeLock, error: ${err.message}`);
@@ -53,10 +56,10 @@ class NoSleep {
   };
 
   disable = () => {
-    if (nativeWakeLock()) {
+    if (isNativeWakeLockSupported) {
       if (this._wakeLock) {
         this._wakeLock.release();
-        console.log("Wake Lock released.");
+        console.info("Wake Lock released.");
       }
       this._wakeLock = null;
     } else {

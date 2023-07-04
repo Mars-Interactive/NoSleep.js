@@ -1,4 +1,4 @@
-/*! NoSleep.js v0.12.8 - git.io/vfn01 - AnaneyTech - MIT license */
+/*! NoSleep.js v0.12.9 - git.io/vfn01 - AnaneyTech - MIT license */
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
 		module.exports = factory();
@@ -25,6 +25,7 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
 function _defineProperty(obj, key, value) { key = _toPropertyKey(key); if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 function _toPropertyKey(arg) { var key = _toPrimitive(arg, "string"); return _typeof(key) === "symbol" ? key : String(key); }
 function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input === null) return input; var prim = input[Symbol.toPrimitive]; if (prim !== undefined) { var res = prim.call(input, hint || "default"); if (_typeof(res) !== "object") return res; throw new TypeError("@@toPrimitive must return a primitive value."); } return (hint === "string" ? String : Number)(input); }
+function _readOnlyError(name) { throw new TypeError("\"" + name + "\" is read-only"); }
 var _require = __webpack_require__(186),
   webm = _require.webm,
   mp4 = _require.mp4;
@@ -33,6 +34,7 @@ var _require = __webpack_require__(186),
 var nativeWakeLock = function nativeWakeLock() {
   return "wakeLock" in navigator && !/samsung|iphone|ipad|ipod/.test(window.navigator.userAgent.toLowerCase());
 };
+var isNativeWakeLockSupported = true;
 var NoSleep = /*#__PURE__*/function () {
   function NoSleep() {
     var _this = this;
@@ -42,7 +44,7 @@ var NoSleep = /*#__PURE__*/function () {
       return _regeneratorRuntime().wrap(function _callee$(_context) {
         while (1) switch (_context.prev = _context.next) {
           case 0:
-            if (!nativeWakeLock()) {
+            if (!isNativeWakeLockSupported) {
               _context.next = 16;
               break;
             }
@@ -53,7 +55,7 @@ var NoSleep = /*#__PURE__*/function () {
             wakeLock = _context.sent;
             _this._wakeLock = wakeLock;
             _this.enabled = true;
-            console.log("Wake Lock active.");
+            console.info("Wake Lock active.");
             _context.next = 14;
             break;
           case 10:
@@ -85,10 +87,10 @@ var NoSleep = /*#__PURE__*/function () {
       }, _callee, null, [[1, 10], [17, 23]]);
     })));
     _defineProperty(this, "disable", function () {
-      if (nativeWakeLock()) {
+      if (isNativeWakeLockSupported) {
         if (_this._wakeLock) {
           _this._wakeLock.release();
-          console.log("Wake Lock released.");
+          console.info("Wake Lock released.");
         }
         _this._wakeLock = null;
       } else {
@@ -100,6 +102,7 @@ var NoSleep = /*#__PURE__*/function () {
     if (nativeWakeLock()) {
       this._wakeLock = null;
     } else {
+      false, _readOnlyError("isNativeWakeLockSupported");
       // Set up no sleep video element
       this.noSleepVideo = document.createElement("video");
       this.noSleepVideo.setAttribute("title", "No Sleep");
