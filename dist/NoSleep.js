@@ -1,4 +1,4 @@
-/*! NoSleep.js v0.12.7 - git.io/vfn01 - AnaneyTech - MIT license */
+/*! NoSleep.js v0.12.8 - git.io/vfn01 - AnaneyTech - MIT license */
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
 		module.exports = factory();
@@ -29,11 +29,6 @@ var _require = __webpack_require__(186),
   webm = _require.webm,
   mp4 = _require.mp4;
 
-// Detect iOS browsers < version 10
-var oldIOS = function oldIOS() {
-  return typeof navigator !== "undefined" && parseFloat(("" + (/CPU.*OS ([0-9_]{3,4})[0-9_]{0,1}|(CPU like).*AppleWebKit.*Mobile/i.exec(navigator.userAgent) || [0, ""])[1]).replace("undefined", "3_2").replace("_", ".").replace("_", "")) < 10 && !window.MSStream;
-};
-
 // Detect native Wake Lock API support (Samsung Browser supports it but cannot use it + not fully supported in iOS)
 var nativeWakeLock = function nativeWakeLock() {
   return "wakeLock" in navigator && !/samsung|iphone|ipad|ipod/.test(window.navigator.userAgent.toLowerCase());
@@ -42,20 +37,13 @@ var NoSleep = /*#__PURE__*/function () {
   function NoSleep() {
     var _this = this;
     _classCallCheck(this, NoSleep);
-    _defineProperty(this, "handleVisibilityChange", function () {
-      if (_this._wakeLock !== null && document.visibilityState === "visible") {
-        _this.enable();
-      } else {
-        _this.disable();
-      }
-    });
     _defineProperty(this, "enable", /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee() {
-      var wakeLock, playPromise, res;
+      var wakeLock, playPromise;
       return _regeneratorRuntime().wrap(function _callee$(_context) {
         while (1) switch (_context.prev = _context.next) {
           case 0:
             if (!nativeWakeLock()) {
-              _context.next = 17;
+              _context.next = 16;
               break;
             }
             _context.prev = 1;
@@ -66,96 +54,51 @@ var NoSleep = /*#__PURE__*/function () {
             _this._wakeLock = wakeLock;
             _this.enabled = true;
             console.log("Wake Lock active.");
-            _context.next = 15;
+            _context.next = 14;
             break;
           case 10:
             _context.prev = 10;
             _context.t0 = _context["catch"](1);
             _this.enabled = false;
-            console.error("".concat(_context.t0.name, ", ").concat(_context.t0.message));
-            throw _context.t0;
-          case 15:
-            _context.next = 39;
+            console.error("NoSleep failed to activate WakeLock, error: ".concat(_context.t0.message));
+          case 14:
+            _context.next = 27;
             break;
-          case 17:
-            if (!oldIOS()) {
-              _context.next = 25;
-              break;
-            }
-            _this.disable();
-            console.warn("\n        NoSleep enabled for older iOS devices. This can interrupt\n        active or long-running network requests from completing successfully.\n        See https://github.com/richtr/NoSleep.js/issues/15 for more details.\n      ");
-            _this.noSleepTimer = window.setInterval(function () {
-              if (!document.hidden) {
-                window.location.href = window.location.href.split("#")[0];
-                window.setTimeout(window.stop, 0);
-              }
-            }, 15000);
-            _this.enabled = true;
-            return _context.abrupt("return", Promise.resolve());
-          case 25:
+          case 16:
             playPromise = _this.noSleepVideo.play();
-            _context.prev = 26;
-            _context.next = 29;
+            _context.prev = 17;
+            _context.next = 20;
             return playPromise;
-          case 29:
-            res = _context.sent;
+          case 20:
             _this.enabled = true;
-            return _context.abrupt("return", res);
-          case 34:
-            _context.prev = 34;
-            _context.t1 = _context["catch"](26);
+            _context.next = 27;
+            break;
+          case 23:
+            _context.prev = 23;
+            _context.t1 = _context["catch"](17);
             _this.enabled = false;
-            console.error("NoSleep failed to play Video.");
-            throw _context.t1;
-          case 39:
+            console.error("NoSleep failed to play Video, error: ".concat(_context.t1.message));
+          case 27:
           case "end":
             return _context.stop();
         }
-      }, _callee, null, [[1, 10], [26, 34]]);
+      }, _callee, null, [[1, 10], [17, 23]]);
     })));
     _defineProperty(this, "disable", function () {
       if (nativeWakeLock()) {
         if (_this._wakeLock) {
           _this._wakeLock.release();
-          document.removeEventListener("visibilitychange", _this.handleVisibilityChange);
-          document.removeEventListener("fullscreenchange", _this.handleVisibilityChange);
           console.log("Wake Lock released.");
         }
         _this._wakeLock = null;
-      } else if (oldIOS()) {
-        if (_this.noSleepTimer) {
-          console.warn('NoSleep now disabled for older iOS devices.');
-          window.clearInterval(_this.noSleepTimer);
-          _this.noSleepVideo.removeEventListener("loadedmetadata", _this.loadMetaData);
-          _this.noSleepVideo.removeEventListener("timeupdate", _this.timeUpdate);
-          _this.noSleepTimer = null;
-        }
       } else {
         _this.noSleepVideo.pause();
       }
       _this.enabled = false;
     });
-    _defineProperty(this, "timeUpdate", function () {
-      if (_this.noSleepVideo.currentTime > 0.5) {
-        _this.noSleepVideo.currentTime = Math.random();
-      }
-    });
-    _defineProperty(this, "loadMetaData", function () {
-      if (_this.noSleepVideo.duration <= 1) {
-        // webm source
-        _this.noSleepVideo.setAttribute("loop", "");
-      } else {
-        // mp4 source
-        _this.noSleepVideo.addEventListener("timeupdate", _this.timeUpdate);
-      }
-    });
     this.enabled = false;
     if (nativeWakeLock()) {
       this._wakeLock = null;
-      document.addEventListener("visibilitychange", this.handleVisibilityChange);
-      document.addEventListener("fullscreenchange", this.handleVisibilityChange);
-    } else if (oldIOS()) {
-      this.noSleepTimer = null;
     } else {
       // Set up no sleep video element
       this.noSleepVideo = document.createElement("video");
@@ -171,7 +114,6 @@ var NoSleep = /*#__PURE__*/function () {
         top: "-100%"
       });
       document.querySelector("body").append(this.noSleepVideo);
-      this.noSleepVideo.addEventListener("loadedmetadata", this.loadMetaData);
     }
   }
   _createClass(NoSleep, [{

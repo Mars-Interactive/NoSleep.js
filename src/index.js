@@ -1,21 +1,5 @@
 const { webm, mp4 } = require("./media.js");
 
-// Detect iOS browsers < version 10
-const oldIOS = () =>
-  typeof navigator !== "undefined" &&
-  parseFloat(
-    (
-      "" +
-      (/CPU.*OS ([0-9_]{3,4})[0-9_]{0,1}|(CPU like).*AppleWebKit.*Mobile/i.exec(
-        navigator.userAgent
-      ) || [0, ""])[1]
-    )
-      .replace("undefined", "3_2")
-      .replace("_", ".")
-      .replace("_", "")
-  ) < 10 &&
-  !window.MSStream;
-
 // Detect native Wake Lock API support (Samsung Browser supports it but cannot use it + not fully supported in iOS)
 const nativeWakeLock = () =>
   "wakeLock" in navigator &&
@@ -27,10 +11,6 @@ class NoSleep {
 
     if (nativeWakeLock()) {
       this._wakeLock = null;
-      document.addEventListener("visibilitychange", this.handleVisibilityChange);
-      document.addEventListener("fullscreenchange", this.handleVisibilityChange);
-    } else if (oldIOS()) {
-      this.noSleepTimer = null;
     } else {
       // Set up no sleep video element
       this.noSleepVideo = document.createElement("video");
@@ -46,18 +26,8 @@ class NoSleep {
         top: "-100%",
       });
       document.querySelector("body").append(this.noSleepVideo);
-
-      this.noSleepVideo.addEventListener("loadedmetadata", this.loadMetaData);
     }
   }
-
-  handleVisibilityChange = () => {
-    if (this._wakeLock !== null && document.visibilityState === "visible") {
-      this.enable();
-    } else {
-      this.disable();
-    }
-  };
 
   enable = async () => {
     if (nativeWakeLock()) {
@@ -68,34 +38,16 @@ class NoSleep {
         console.log("Wake Lock active.");
       } catch (err) {
         this.enabled = false;
-        console.error(`${err.name}, ${err.message}`);
-        throw err;
+        console.error(`NoSleep failed to activate WakeLock, error: ${err.message}`);
       }
-    } else if (oldIOS()) {
-      this.disable();
-      console.warn(`
-        NoSleep enabled for older iOS devices. This can interrupt
-        active or long-running network requests from completing successfully.
-        See https://github.com/richtr/NoSleep.js/issues/15 for more details.
-      `);
-      this.noSleepTimer = window.setInterval(() => {
-        if (!document.hidden) {
-          window.location.href = window.location.href.split("#")[0];
-          window.setTimeout(window.stop, 0);
-        }
-      }, 15000);
-      this.enabled = true;
-      return Promise.resolve();
     } else {
       let playPromise = this.noSleepVideo.play();
       try {
-        const res = await playPromise;
+        await playPromise;
         this.enabled = true;
-        return res;
-      } catch (err_1) {
+      } catch (err) {
         this.enabled = false;
-        console.error("NoSleep failed to play Video.");
-        throw err_1;
+        console.error(`NoSleep failed to play Video, error: ${err.message}`);
       }
     }
   };
@@ -104,39 +56,13 @@ class NoSleep {
     if (nativeWakeLock()) {
       if (this._wakeLock) {
         this._wakeLock.release();
-        document.removeEventListener("visibilitychange", this.handleVisibilityChange);
-        document.removeEventListener("fullscreenchange", this.handleVisibilityChange);
         console.log("Wake Lock released.");
       }
       this._wakeLock = null;
-    } else if (oldIOS()) {
-      if (this.noSleepTimer) {
-        console.warn('NoSleep now disabled for older iOS devices.');
-        window.clearInterval(this.noSleepTimer);
-        this.noSleepVideo.removeEventListener("loadedmetadata", this.loadMetaData);
-        this.noSleepVideo.removeEventListener("timeupdate", this.timeUpdate);
-        this.noSleepTimer = null;
-      }
     } else {
       this.noSleepVideo.pause();
     }
     this.enabled = false;
-  };
-
-  timeUpdate = () => {
-    if (this.noSleepVideo.currentTime > 0.5) {
-      this.noSleepVideo.currentTime = Math.random();
-    }
-  };
-
-  loadMetaData = () => {
-    if (this.noSleepVideo.duration <= 1) {
-      // webm source
-      this.noSleepVideo.setAttribute("loop", "");
-    } else {
-      // mp4 source
-      this.noSleepVideo.addEventListener("timeupdate", this.timeUpdate);
-    }
   };
 
   _addSourceToVideo(element, type, dataURI) {
