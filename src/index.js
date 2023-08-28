@@ -8,10 +8,10 @@ const nativeWakeLock = () =>
 let isNativeWakeLockSupported = true;
 
 class NoSleep {
-  constructor(disabledWakeLock = false) {
+  constructor(enableWakeLockIfSupported = true) {
     this.enabled = false;
 
-    if (!disabledWakeLock && nativeWakeLock()) {
+    if (enableWakeLockIfSupported && nativeWakeLock()) {
       this._wakeLock = null;
     } else {
       isNativeWakeLockSupported = false;

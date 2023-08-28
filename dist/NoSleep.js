@@ -1,4 +1,4 @@
-/*! NoSleep.js v0.12.14 - git.io/vfn01 - AnaneyTech - MIT license */
+/*! NoSleep.js v0.12.15 - git.io/vfn01 - AnaneyTech - MIT license */
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
 		module.exports = factory();
@@ -37,7 +37,7 @@ var isNativeWakeLockSupported = true;
 var NoSleep = /*#__PURE__*/function () {
   function NoSleep() {
     var _this = this;
-    var disabledWakeLock = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
+    var enableWakeLockIfSupported = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : true;
     _classCallCheck(this, NoSleep);
     _defineProperty(this, "enable", /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee() {
       var wakeLock, playPromise;
@@ -99,7 +99,7 @@ var NoSleep = /*#__PURE__*/function () {
       _this.enabled = false;
     });
     this.enabled = false;
-    if (!disabledWakeLock && nativeWakeLock()) {
+    if (enableWakeLockIfSupported && nativeWakeLock()) {
       this._wakeLock = null;
     } else {
       isNativeWakeLockSupported = false;

@@ -1,6 +1,6 @@
 declare namespace nosleep {
   class NoSleep {
-    constructor(disabledWakeLock: boolean);
+    constructor(enableWakeLockIfSupported?: boolean);
 
     get isEnabled(): boolean;
     enable(): Promise<any>;
