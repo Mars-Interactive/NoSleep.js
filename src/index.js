@@ -8,10 +8,10 @@ const nativeWakeLock = () =>
 let isNativeWakeLockSupported = true;
 
 class NoSleep {
-  constructor() {
+  constructor(disabledWakeLock = false) {
     this.enabled = false;
 
-    if (nativeWakeLock()) {
+    if (disabledWakeLock && nativeWakeLock()) {
       this._wakeLock = null;
     } else {
       isNativeWakeLockSupported = false;
@@ -72,6 +72,7 @@ class NoSleep {
     var source = document.createElement("source");
     source.src = dataURI;
     source.type = `video/${type}`;
+    source.setAttribute('playsinline', 'true');
     element.appendChild(source);
   }
 

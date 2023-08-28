@@ -1,4 +1,4 @@
-/*! NoSleep.js v0.12.10 - git.io/vfn01 - AnaneyTech - MIT license */
+/*! NoSleep.js v0.12.12 - git.io/vfn01 - AnaneyTech - MIT license */
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
 		module.exports = factory();
@@ -37,6 +37,7 @@ var isNativeWakeLockSupported = true;
 var NoSleep = /*#__PURE__*/function () {
   function NoSleep() {
     var _this = this;
+    var disabledWakeLock = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
     _classCallCheck(this, NoSleep);
     _defineProperty(this, "enable", /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee() {
       var wakeLock, playPromise;
@@ -98,7 +99,7 @@ var NoSleep = /*#__PURE__*/function () {
       _this.enabled = false;
     });
     this.enabled = false;
-    if (nativeWakeLock()) {
+    if (disabledWakeLock && nativeWakeLock()) {
       this._wakeLock = null;
     } else {
       isNativeWakeLockSupported = false;
@@ -124,6 +125,7 @@ var NoSleep = /*#__PURE__*/function () {
       var source = document.createElement("source");
       source.src = dataURI;
       source.type = "video/".concat(type);
+      source.setAttribute('playsinline', 'true');
       element.appendChild(source);
     }
   }, {
