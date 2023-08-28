@@ -1,4 +1,4 @@
-/*! NoSleep.js v0.12.15 - git.io/vfn01 - AnaneyTech - MIT license */
+/*! NoSleep.js v0.12.16 - git.io/vfn01 - AnaneyTech - MIT license */
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
 		module.exports = factory();
@@ -31,7 +31,7 @@ var _require = __webpack_require__(186),
 
 // Detect native Wake Lock API support (Samsung Browser supports it but cannot use it + not fully supported in iOS)
 var nativeWakeLock = function nativeWakeLock() {
-  return "wakeLock" in navigator && !/samsung|iphone|ipad|ipod/.test(window.navigator.userAgent.toLowerCase());
+  return "wakeLock" in navigator && !(/ipad|iphone|ipod/i.test(navigator.userAgent) || navigator.userAgent.includes("Mac") && "ontouchend" in document);
 };
 var isNativeWakeLockSupported = true;
 var NoSleep = /*#__PURE__*/function () {
@@ -101,6 +101,13 @@ var NoSleep = /*#__PURE__*/function () {
     this.enabled = false;
     if (enableWakeLockIfSupported && nativeWakeLock()) {
       this._wakeLock = null;
+      var handleVisibilityChange = function handleVisibilityChange() {
+        if (_this._wakeLock !== null && document.visibilityState === "visible") {
+          _this.enable();
+        }
+      };
+      document.addEventListener("visibilitychange", handleVisibilityChange);
+      document.addEventListener("fullscreenchange", handleVisibilityChange);
     } else {
       isNativeWakeLockSupported = false;
       // Set up no sleep video element
@@ -117,6 +124,19 @@ var NoSleep = /*#__PURE__*/function () {
         top: "-100%"
       });
       document.querySelector("body").append(this.noSleepVideo);
+      this.noSleepVideo.addEventListener("loadedmetadata", function () {
+        if (_this.noSleepVideo.duration <= 1) {
+          // webm source
+          _this.noSleepVideo.setAttribute("loop", "");
+        } else {
+          // mp4 source
+          _this.noSleepVideo.addEventListener("timeupdate", function () {
+            if (_this.noSleepVideo.currentTime > 0.5) {
+              _this.noSleepVideo.currentTime = Math.random();
+            }
+          });
+        }
+      });
     }
   }
   _createClass(NoSleep, [{

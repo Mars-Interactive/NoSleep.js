@@ -3,7 +3,7 @@ const { webm, mp4 } = require("./media.js");
 // Detect native Wake Lock API support (Samsung Browser supports it but cannot use it + not fully supported in iOS)
 const nativeWakeLock = () =>
   "wakeLock" in navigator &&
-  !(/samsung|iphone|ipad|ipod/).test(window.navigator.userAgent.toLowerCase());
+  !((/ipad|iphone|ipod/i).test(navigator.userAgent) || (navigator.userAgent.includes("Mac") && "ontouchend" in document))
 
 let isNativeWakeLockSupported = true;
 
@@ -13,6 +13,13 @@ class NoSleep {
 
     if (enableWakeLockIfSupported && nativeWakeLock()) {
       this._wakeLock = null;
+      const handleVisibilityChange = () => {
+        if (this._wakeLock !== null && document.visibilityState === "visible") {
+          this.enable();
+        }
+      };
+      document.addEventListener("visibilitychange", handleVisibilityChange);
+      document.addEventListener("fullscreenchange", handleVisibilityChange);
     } else {
       isNativeWakeLockSupported = false;
       // Set up no sleep video element
@@ -29,6 +36,20 @@ class NoSleep {
         top: "-100%",
       });
       document.querySelector("body").append(this.noSleepVideo);
+
+      this.noSleepVideo.addEventListener("loadedmetadata", () => {
+        if (this.noSleepVideo.duration <= 1) {
+          // webm source
+          this.noSleepVideo.setAttribute("loop", "");
+        } else {
+          // mp4 source
+          this.noSleepVideo.addEventListener("timeupdate", () => {
+            if (this.noSleepVideo.currentTime > 0.5) {
+              this.noSleepVideo.currentTime = Math.random();
+            }
+          });
+        }
+      });
     }
   }
 
