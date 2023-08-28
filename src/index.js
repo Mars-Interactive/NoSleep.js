@@ -11,7 +11,7 @@ class NoSleep {
   constructor(disabledWakeLock = false) {
     this.enabled = false;
 
-    if (disabledWakeLock && nativeWakeLock()) {
+    if (!disabledWakeLock && nativeWakeLock()) {
       this._wakeLock = null;
     } else {
       isNativeWakeLockSupported = false;

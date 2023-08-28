@@ -1,4 +1,4 @@
-/*! NoSleep.js v0.12.12 - git.io/vfn01 - AnaneyTech - MIT license */
+/*! NoSleep.js v0.12.13 - git.io/vfn01 - AnaneyTech - MIT license */
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
 		module.exports = factory();
@@ -99,7 +99,7 @@ var NoSleep = /*#__PURE__*/function () {
       _this.enabled = false;
     });
     this.enabled = false;
-    if (disabledWakeLock && nativeWakeLock()) {
+    if (!disabledWakeLock && nativeWakeLock()) {
       this._wakeLock = null;
     } else {
       isNativeWakeLockSupported = false;
