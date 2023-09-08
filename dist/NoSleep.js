@@ -1,4 +1,4 @@
-/*! NoSleep.js v0.12.16 - git.io/vfn01 - AnaneyTech - MIT license */
+/*! NoSleep.js v0.12.17 - git.io/vfn01 - AnaneyTech - MIT license */
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
 		module.exports = factory();
@@ -40,51 +40,48 @@ var NoSleep = /*#__PURE__*/function () {
     var enableWakeLockIfSupported = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : true;
     _classCallCheck(this, NoSleep);
     _defineProperty(this, "enable", /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee() {
-      var wakeLock, playPromise;
       return _regeneratorRuntime().wrap(function _callee$(_context) {
         while (1) switch (_context.prev = _context.next) {
           case 0:
             if (!isNativeWakeLockSupported) {
-              _context.next = 16;
+              _context.next = 15;
               break;
             }
             _context.prev = 1;
             _context.next = 4;
             return navigator.wakeLock.request("screen");
           case 4:
-            wakeLock = _context.sent;
-            _this._wakeLock = wakeLock;
+            _this._wakeLock = _context.sent;
             _this.enabled = true;
             console.info("Wake Lock active.");
-            _context.next = 14;
+            _context.next = 13;
             break;
-          case 10:
-            _context.prev = 10;
+          case 9:
+            _context.prev = 9;
             _context.t0 = _context["catch"](1);
             _this.enabled = false;
             console.error("NoSleep failed to activate WakeLock, error: ".concat(_context.t0.message));
-          case 14:
-            _context.next = 27;
+          case 13:
+            _context.next = 25;
             break;
-          case 16:
-            playPromise = _this.noSleepVideo.play();
-            _context.prev = 17;
-            _context.next = 20;
-            return playPromise;
-          case 20:
+          case 15:
+            _context.prev = 15;
+            _context.next = 18;
+            return _this.noSleepVideo.play();
+          case 18:
             _this.enabled = true;
-            _context.next = 27;
+            _context.next = 25;
             break;
-          case 23:
-            _context.prev = 23;
-            _context.t1 = _context["catch"](17);
+          case 21:
+            _context.prev = 21;
+            _context.t1 = _context["catch"](15);
             _this.enabled = false;
             console.error("NoSleep failed to play Video, error: ".concat(_context.t1.message));
-          case 27:
+          case 25:
           case "end":
             return _context.stop();
         }
-      }, _callee, null, [[1, 10], [17, 23]]);
+      }, _callee, null, [[1, 9], [15, 21]]);
     })));
     _defineProperty(this, "disable", function () {
       if (isNativeWakeLockSupported) {

@@ -56,8 +56,7 @@ class NoSleep {
   enable = async () => {
     if (isNativeWakeLockSupported) {
       try {
-        const wakeLock = await navigator.wakeLock.request("screen");
-        this._wakeLock = wakeLock;
+        this._wakeLock = await navigator.wakeLock.request("screen");
         this.enabled = true;
         console.info("Wake Lock active.");
       } catch (err) {
@@ -65,9 +64,8 @@ class NoSleep {
         console.error(`NoSleep failed to activate WakeLock, error: ${err.message}`);
       }
     } else {
-      let playPromise = this.noSleepVideo.play();
       try {
-        await playPromise;
+        await this.noSleepVideo.play();
         this.enabled = true;
       } catch (err) {
         this.enabled = false;
