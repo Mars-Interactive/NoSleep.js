@@ -61,7 +61,7 @@ class NoSleep {
         console.info("Wake Lock active.");
       } catch (err) {
         this.enabled = false;
-        console.error(`NoSleep failed to activate WakeLock, error: ${err.message}`);
+        console.warn(`NoSleep failed to activate WakeLock, ${err.message}`);
       }
     } else {
       try {
@@ -69,7 +69,7 @@ class NoSleep {
         this.enabled = true;
       } catch (err) {
         this.enabled = false;
-        console.error(`NoSleep failed to play Video, error: ${err.message}`);
+        console.warn(`NoSleep failed to play Video, ${err.message}`);
       }
     }
   };

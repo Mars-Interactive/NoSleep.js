@@ -1,4 +1,4 @@
-/*! NoSleep.js v0.12.17 - git.io/vfn01 - AnaneyTech - MIT license */
+/*! NoSleep.js v0.12.18 - git.io/vfn01 - AnaneyTech - MIT license */
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
 		module.exports = factory();
@@ -60,7 +60,7 @@ var NoSleep = /*#__PURE__*/function () {
             _context.prev = 9;
             _context.t0 = _context["catch"](1);
             _this.enabled = false;
-            console.error("NoSleep failed to activate WakeLock, error: ".concat(_context.t0.message));
+            console.warn("NoSleep failed to activate WakeLock, ".concat(_context.t0.message));
           case 13:
             _context.next = 25;
             break;
@@ -76,7 +76,7 @@ var NoSleep = /*#__PURE__*/function () {
             _context.prev = 21;
             _context.t1 = _context["catch"](15);
             _this.enabled = false;
-            console.error("NoSleep failed to play Video, error: ".concat(_context.t1.message));
+            console.warn("NoSleep failed to play Video, ".concat(_context.t1.message));
           case 25:
           case "end":
             return _context.stop();
