@@ -1,4 +1,4 @@
-/*! NoSleep.js v0.12.18 - git.io/vfn01 - AnaneyTech - MIT license */
+/*! NoSleep.js v0.12.19 - git.io/vfn01 - AnaneyTech - MIT license */
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
 		module.exports = factory();
@@ -111,6 +111,7 @@ var NoSleep = /*#__PURE__*/function () {
       this.noSleepVideo = document.createElement("video");
       this.noSleepVideo.setAttribute("title", "No Sleep");
       this.noSleepVideo.setAttribute("playsinline", "");
+      this.noSleepVideo.setAttribute("muted", "true");
       this._addSourceToVideo(this.noSleepVideo, "webm", webm);
       this._addSourceToVideo(this.noSleepVideo, "mp4", mp4);
 
