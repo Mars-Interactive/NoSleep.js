@@ -6,7 +6,6 @@ const nativeWakeLock = () =>
   !((/ipad|iphone|ipod/i).test(navigator.userAgent) || (navigator.userAgent.includes("Mac") && "ontouchend" in document))
 
 let isNativeWakeLockSupported = true;
-let videoCanStart = false;
 
 class NoSleep {
   constructor(enableWakeLockIfSupported = true) {
@@ -29,9 +28,6 @@ class NoSleep {
       this.noSleepVideo.setAttribute("playsinline", "");
       this._addSourceToVideo(this.noSleepVideo, "webm", webm);
       this._addSourceToVideo(this.noSleepVideo, "mp4", mp4);
-      this.noSleepVideo.oncanplaythrough = () => {
-        videoCanStart = true;
-      };
 
       // For iOS >15 video needs to be on the document to work as a wake lock
       Object.assign(this.noSleepVideo.style, {
@@ -69,10 +65,8 @@ class NoSleep {
       }
     } else {
       try {
-        if (videoCanStart) {
-          await this.noSleepVideo.play();
-          this.enabled = true;
-        }
+        await this.noSleepVideo.play();
+        this.enabled = true;
       } catch (err) {
         this.enabled = false;
         console.warn(`NoSleep failed to play Video, ${err.message}`);
@@ -88,7 +82,6 @@ class NoSleep {
       }
       this._wakeLock = null;
     } else {
-      videoCanStart = false;
       this.noSleepVideo.pause();
     }
     this.enabled = false;

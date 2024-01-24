@@ -1,4 +1,4 @@
-/*! NoSleep.js v0.12.21 - git.io/vfn01 - AnaneyTech - MIT license */
+/*! NoSleep.js v0.12.22 - git.io/vfn01 - AnaneyTech - MIT license */
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
 		module.exports = factory();
@@ -34,7 +34,6 @@ var nativeWakeLock = function nativeWakeLock() {
   return "wakeLock" in navigator && !(/ipad|iphone|ipod/i.test(navigator.userAgent) || navigator.userAgent.includes("Mac") && "ontouchend" in document);
 };
 var isNativeWakeLockSupported = true;
-var videoCanStart = false;
 var NoSleep = /*#__PURE__*/function () {
   function NoSleep() {
     var _this = this;
@@ -63,31 +62,26 @@ var NoSleep = /*#__PURE__*/function () {
             _this.enabled = false;
             console.warn("NoSleep failed to activate WakeLock, ".concat(_context.t0.message));
           case 13:
-            _context.next = 26;
+            _context.next = 25;
             break;
           case 15:
             _context.prev = 15;
-            if (!videoCanStart) {
-              _context.next = 20;
-              break;
-            }
-            _context.next = 19;
+            _context.next = 18;
             return _this.noSleepVideo.play();
-          case 19:
+          case 18:
             _this.enabled = true;
-          case 20:
-            _context.next = 26;
+            _context.next = 25;
             break;
-          case 22:
-            _context.prev = 22;
+          case 21:
+            _context.prev = 21;
             _context.t1 = _context["catch"](15);
             _this.enabled = false;
             console.warn("NoSleep failed to play Video, ".concat(_context.t1.message));
-          case 26:
+          case 25:
           case "end":
             return _context.stop();
         }
-      }, _callee, null, [[1, 9], [15, 22]]);
+      }, _callee, null, [[1, 9], [15, 21]]);
     })));
     _defineProperty(this, "disable", function () {
       if (isNativeWakeLockSupported) {
@@ -97,7 +91,6 @@ var NoSleep = /*#__PURE__*/function () {
         }
         _this._wakeLock = null;
       } else {
-        videoCanStart = false;
         _this.noSleepVideo.pause();
       }
       _this.enabled = false;
@@ -120,9 +113,6 @@ var NoSleep = /*#__PURE__*/function () {
       this.noSleepVideo.setAttribute("playsinline", "");
       this._addSourceToVideo(this.noSleepVideo, "webm", webm);
       this._addSourceToVideo(this.noSleepVideo, "mp4", mp4);
-      this.noSleepVideo.oncanplaythrough = function () {
-        videoCanStart = true;
-      };
 
       // For iOS >15 video needs to be on the document to work as a wake lock
       Object.assign(this.noSleepVideo.style, {
@@ -181,7 +171,7 @@ module.exports = {
 /************************************************************************/
 /******/ 	// The module cache
 /******/ 	var __webpack_module_cache__ = {};
-/******/ 	
+/******/
 /******/ 	// The require function
 /******/ 	function __webpack_require__(moduleId) {
 /******/ 		// Check if module is in cache
@@ -195,21 +185,21 @@ module.exports = {
 /******/ 			// no module.loaded needed
 /******/ 			exports: {}
 /******/ 		};
-/******/ 	
+/******/
 /******/ 		// Execute the module function
 /******/ 		__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
-/******/ 	
+/******/
 /******/ 		// Return the exports of the module
 /******/ 		return module.exports;
 /******/ 	}
-/******/ 	
+/******/
 /************************************************************************/
-/******/ 	
+/******/
 /******/ 	// startup
 /******/ 	// Load entry module and return exports
 /******/ 	// This entry module is referenced by other modules so it can't be inlined
 /******/ 	var __webpack_exports__ = __webpack_require__(352);
-/******/ 	
+/******/
 /******/ 	return __webpack_exports__;
 /******/ })()
 ;
