@@ -1,4 +1,6 @@
-const { webm, mp4 } = require('./media.js');
+import media from './media.js';
+
+const { webm, mp4 } = media;
 
 const nativeWakeLockSupported = () => {
   // Check for 'wakeLock' support AND exclude specific iOS/iPadOS user agents
@@ -132,4 +134,4 @@ class NoSleep {
   }
 }
 
-module.exports = NoSleep;
+export default NoSleep;

@@ -37,8 +37,11 @@ const umdConfig = {
   output: {
     path: path.resolve(__dirname, 'dist'),
     filename: 'NoSleep.umd.js',
-    library: 'NoSleep',
-    libraryTarget: 'umd',
+    library: {
+      name: 'NoSleep',
+      type: 'umd',
+      export: 'default',
+    },
     globalObject: 'this',
   },
   optimization: {
@@ -70,7 +73,9 @@ const esmConfig = {
   output: {
     path: path.resolve(__dirname, 'dist'),
     filename: 'NoSleep.esm.js',
-    libraryTarget: 'module',
+    library: {
+        type: 'module',
+    },
   },
   experiments: {
     outputModule: true,
