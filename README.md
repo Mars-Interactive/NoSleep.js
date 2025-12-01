@@ -6,32 +6,32 @@ Prevent display sleep and enable wake lock in all Android and iOS web browsers.
 
 This package is published to npm as **@marsgames/nosleep.js** and can be installed with:
 
-`npm install @marsgames/nosleep.js`
+`pnpm install @marsgames/nosleep.js`
 
 ## Build from source
 
 Install all development dependencies with:
 
-`npm install`
+`pnpm install`
 
 To build this library run:
 
-`npm run build`
+`pnpm run build`
 
 ## Usage
 
-Import ES6 module:
+The library is distributed as a modern ES Module (ESM).
 
 ```javascript
+// Import as an ES Module
 import NoSleep from '@marsgames/nosleep.js';
-```
 
-Create a new NoSleep object and then enable or disable it when needed.
+// Create a new NoSleep instance.
+// By default, it attempts to use the native Wake Lock API first.
+const noSleep = new NoSleep();
 
-To create a new NoSleep object:
-
-```javascript
-var noSleep = new NoSleep();
+// Optional: To force the deprecated video-based fallback method, use:
+// const noSleepFallback = new NoSleep(false);
 ```
 
 To enable wake lock:
@@ -43,7 +43,11 @@ To enable wake lock:
 // (must be wrapped in a user input event handler e.g. a mouse or touch handler)
 document.addEventListener('click', function enableNoSleep() {
   document.removeEventListener('click', enableNoSleep, false);
-  noSleep.enable();
+
+  // Asynchronous call required for the Wake Lock API
+  noSleep.enable()
+    .then(() => console.log('NoSleep is active!'))
+    .catch((error) => console.error('NoSleep failed to activate:', error));
 }, false);
 ```
 

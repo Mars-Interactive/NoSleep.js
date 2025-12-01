@@ -1,6 +1,18 @@
+# Dependencies
 /node_modules
-/tmp/*
-.grunt
+/dist
+
+# npm lock file
+package-lock.json
+
+# pnpm lock file
+pnpm-lock.yaml
+
+# IDE files
+.vscode
+
+# Misc
+/tmp
 logs
 *.log
 .DS_Store
