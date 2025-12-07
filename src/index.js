@@ -99,7 +99,7 @@ class NoSleep {
           console.warn('Wake Lock released by browser.');
         });
         this.enabled = true;
-        console.info('Wake Lock active.');
+        // console.info('Wake Lock active.');
       } catch (err) {
         this.enabled = false;
         console.warn(`NoSleep failed to activate WakeLock: ${err.message}`);
@@ -121,7 +121,7 @@ class NoSleep {
         this._wakeLock.release().then(() => {
           this._wakeLock = null;
         });
-        console.info('Wake Lock released.');
+        // console.info('Wake Lock released.');
       }
     } else if (this._noSleepVideo) {
       this._noSleepVideo.pause();
